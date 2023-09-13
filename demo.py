@@ -179,7 +179,8 @@ def get_response(prompt):
 if __name__ == "__main__":
 
     # Set page title
-    st.title("Vivek Ramaswamy")
+    st.title("Vivek Ramaswamy's AI Profile")
+    st.write('Powered by Molus🔺 | Contact: suibhne@molus.app')
 
     # Setup personalization parameters
     if "personalization" not in st.session_state:
