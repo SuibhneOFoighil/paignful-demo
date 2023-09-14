@@ -233,6 +233,7 @@ if __name__ == "__main__":
                 print("Audio stream failed")
                 print(BrokenPipeError)
                 print(IOError)
+                st.error("Audio stream failed")
             # stream_audio(time_buying_response, strip=False)
             
             # Give the model some time to think
@@ -252,6 +253,7 @@ if __name__ == "__main__":
                 print("Audio stream failed")
                 print(BrokenPipeError)
                 print(IOError)
+                st.error("Audio stream failed")
 
             # Stream transcribed response 
             status.write('Transcribing response...')
