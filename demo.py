@@ -183,7 +183,7 @@ if __name__ == "__main__":
 
     # Set page title
     st.title("Vivek Ramaswamy's AI Profile")
-    st.write('Powered by Molus🔺 | Contact: suibhne@molus.app')
+    st.write('Powered by [Molus](https://molus.app)🔺 | Contact: suibhne@molus.app')
 
     # Setup personalization parameters
     if "personalization" not in st.session_state:
