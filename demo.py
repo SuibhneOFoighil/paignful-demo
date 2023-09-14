@@ -8,7 +8,6 @@ import json
 import re
 from elevenlabs import set_api_key, generate, stream, VoiceSettings, Voice
 from dotenv import load_dotenv
-from signal import signal, SIGPIPE, SIG_DFL
 
 import vectorize as ret
 
@@ -17,9 +16,6 @@ load_dotenv()
 openai.api_key = os.environ.get('OPENAI_API_KEY')
 ELEVEN_KEY = os.environ.get("ELEVEN_KEY")
 set_api_key(ELEVEN_KEY)
-
-# Ignore broken pipe errors
-signal(SIGPIPE,SIG_DFL)
 
 PROFILE_PIC = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Vivek_Ramaswamy_by_Gage_Skidmore.jpg/640px-Vivek_Ramaswamy_by_Gage_Skidmore.jpg"
 
