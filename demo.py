@@ -68,6 +68,8 @@ def extract_video_link_and_start_time(url):
 def strip_citations(text) -> str:
     pattern = r'\*\*((\(\d+\))+)\*\*'
     stripped_text = re.sub(pattern, '', text)
+    pattern = r'\(\d+\)'
+    stripped_text = re.sub(pattern, '', stripped_text)
     return stripped_text
 
 def display_citations(citations, placeholder=None):
@@ -96,7 +98,8 @@ def stream_audio(response, strip):
         ),
         stream=True
     )
-    return stream(audio_stream)
+    recording = stream(audio_stream)
+    return recording
 
 # output text 
 def display_transcription(output_text, placeholder):
