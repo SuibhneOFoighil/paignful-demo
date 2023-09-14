@@ -227,7 +227,13 @@ if __name__ == "__main__":
 
             # Read time buying response
             time_buying_response = get_time_buying_response()
-            stream_audio(time_buying_response, strip=False)
+            try:
+                audio_response = stream_audio(time_buying_response, strip=False)
+            except (BrokenPipeError, IOError):
+                print("Audio stream failed")
+                print(BrokenPipeError)
+                print(IOError)
+            # stream_audio(time_buying_response, strip=False)
             
             # Give the model some time to think
             status.write("Gathering thoughts...")
@@ -239,8 +245,13 @@ if __name__ == "__main__":
             
             # Respond with model response
             status.write('Responding to you...')
-            audio_response = stream_audio(assistant_response, strip=True)
-            audio_placeholder.audio(audio_response)
+            try:
+                audio_response = stream_audio(assistant_response, strip=True)
+                audio_placeholder.audio(audio_response)
+            except (BrokenPipeError, IOError):
+                print("Audio stream failed")
+                print(BrokenPipeError)
+                print(IOError)
 
             # Stream transcribed response 
             status.write('Transcribing response...')
