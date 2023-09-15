@@ -101,19 +101,6 @@ def stream_audio(response, strip):
     recording = stream(audio_stream)
     return recording
 
-def generate_audio(response, strip):
-    to_speak = strip_citations(response) if strip else response
-    audio = generate(
-        text=to_speak,
-        voice=Voice(
-            voice_id='lAZKsjhcbMmadBhSMtZk',
-            settings=VoiceSettings(
-                stability=0.3, similarity_boost=1, style=0.05, use_speaker_boost=True
-            )
-        )
-    )
-    return audio
-
 # output text 
 def display_transcription(output_text, placeholder):
     full_response = '#### Transcript \n\n'
@@ -192,19 +179,6 @@ def get_response(prompt):
     response_text = response.choices[0]["message"]["content"]
     return response_text, citations
 
-# precompute opener audio responses
-@st.cache_data
-def generate_time_buying_response(response):
-    time_buying_response = get_time_buying_response()
-    audio = generate_audio(time_buying_response, strip=False)
-    return audio
-
-#wrapper for playing audio
-def play_time_buying_response():
-    response = get_time_buying_response()
-    audio = generate_time_buying_response(response)
-    play(audio)
-
 if __name__ == "__main__":
 
     # Set page title
@@ -250,6 +224,17 @@ if __name__ == "__main__":
             status_placeholder = st.empty()
 
             status = status_placeholder.status("Processing...", expanded=True)
+
+            # Read time buying response
+            time_buying_response = get_time_buying_response()
+            try:
+                audio_response = stream_audio(time_buying_response, strip=False)
+            except (BrokenPipeError, IOError):
+                print("Audio stream failed")
+                print(BrokenPipeError)
+                print(IOError)
+                st.error("Audio stream failed")
+            # stream_audio(time_buying_response, strip=False)
             
             # Give the model some time to think
             status.write("Gathering thoughts...")
@@ -260,19 +245,18 @@ if __name__ == "__main__":
             # # stream_audio(full_response)
             
             # Respond with model response
-            # status.write('Responding to you...')
-            # try:
-            #     audio_response = stream_audio(assistant_response, strip=True)
-            #     audio_placeholder.audio(audio_response)
-            # except (BrokenPipeError, IOError):
-            #     print("Audio stream failed")
-            #     print(BrokenPipeError)
-            #     print(IOError)
-            #     st.error("Audio stream failed")
-            
+            status.write('Responding to you...')
+            try:
+                audio_response = stream_audio(assistant_response, strip=True)
+                audio_placeholder.audio(audio_response)
+            except (BrokenPipeError, IOError):
+                print("Audio stream failed")
+                print(BrokenPipeError)
+                print(IOError)
+                st.error("Audio stream failed")
 
             # Stream transcribed response 
-            status.write('Responding to you...')
+            status.write('Transcribing response...')
             display_transcription(assistant_response, transcription_placeholder)
 
             # Display citations
@@ -281,11 +265,6 @@ if __name__ == "__main__":
             citations = list(zip(*used_citations))
             # citations = [[1], ['https://www.youtube.com/watch?v=7eJUMRyNev4&t=430']]
             display_citations(citations, citation_placeholder)
-
-            # Display audio
-            status.write('Generating audio...')
-            audio_response = generate_audio(assistant_response, strip=True)
-            audio_placeholder.audio(audio_response)
 
             # Close status bar
             status_placeholder.empty()
