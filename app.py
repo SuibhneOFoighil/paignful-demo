@@ -132,16 +132,20 @@ def get_response(prompt):
 
     # send model the info on the function call and function response
     # TODO: handle openai.error.ServiceUnavailableError:
-    response = openai.ChatCompletion.create(
-        model="gpt-4-0613",# "gpt-3.5-turbo-16k-0613"
-        messages=chat_history+[
-            {
-                "role": "function",
-                "name": "get_viveks_quotes",
-                "content": function_response,
-            },
-        ],
-    )
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4-0613",# "gpt-3.5-turbo-16k-0613"
+            messages=chat_history+[
+                {
+                    "role": "function",
+                    "name": "get_viveks_quotes",
+                    "content": function_response,
+                },
+            ],
+        )
+    except openai.error.ServiceUnavailableError:
+        st.error("OpenAI API is currently unavailable. Please try again later.")
+        st.stop()
 
     # return response and citations
     response_text = response.choices[0]["message"]["content"]
