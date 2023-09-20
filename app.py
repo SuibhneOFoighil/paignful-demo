@@ -111,8 +111,10 @@ def get_response(prompt):
     
     % User Profile %
     Adapt your response to the user profile: "{st.session_state.personalization['who']}"
-    {"Speak to me like I'm 5" if st.session_state.personalization['simplification'] else ""}
-    """
+    
+    % Language %
+    Respond to me in {st.session_state.personalization['language']}. """
+
     system_prompt = {
         "role": "system",
         "content": system_message
@@ -195,7 +197,7 @@ if __name__ == "__main__":
     if "personalization" not in st.session_state:
         st.session_state.personalization = {
             "who": "My name is Ian. I'm a farmer from Iowa. I'm pro-gun, pro-abortion, and worried about the economy.",
-            "simplification": False
+            "language": "English"
         }
     
     # Initialize chat history
@@ -205,7 +207,7 @@ if __name__ == "__main__":
     with st.sidebar:
         st.header("Personalization")
         st.session_state.personalization['who'] = st.text_area("Who are you?", "My name is Ian. I'm a farmer from Iowa. I'm pro-gun, pro-abortion, and worried about the economy.")
-        st.session_state.personalization['simplification'] = st.checkbox("Speak to me like I'm 5")
+        st.session_state.personalization['language'] = st.selectbox("What language do you speak?", ["English", "Spanish", "Hindi"])
 
     # Display chat messages from history on app rerun
     for message in st.session_state.messages:
