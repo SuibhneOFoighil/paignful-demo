@@ -21,7 +21,7 @@ set_api_key(ELEVEN_KEY)
 
 VIVEK_PROFILE_PIC = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Vivek_Ramaswamy_by_Gage_Skidmore.jpg/640px-Vivek_Ramaswamy_by_Gage_Skidmore.jpg"
 
-USER_PROFILE_PIC = '🇺🇸'
+USER_PROFILE_PIC = 'https://photos1.blogger.com/blogger/5283/727/320/farmer-headshot3.JPG'
 
 # Initialize Pinecone index
 pinecone.init(
@@ -107,15 +107,11 @@ def get_response(prompt):
     
     % Formatting Instructions %
     If you reference the quotes, always cite them individually in your response, like so: 'I have always supported dogs (1)(2).'
+    Limit your response to 100 words.
     
     % User Profile %
     Adapt your response to the user profile: "{st.session_state.personalization['who']}"
-
-    % Response Length %
-    Limit your response to {st.session_state.personalization['length']} words
-
-    % Simplification %
-    {"speak to me like I'm 5" if st.session_state.personalization['simplification'] else ""}
+    {"Speak to me like I'm 5" if st.session_state.personalization['simplification'] else ""}
     """
     system_prompt = {
         "role": "system",
@@ -135,6 +131,7 @@ def get_response(prompt):
     citations = ret.get_citations(X)
 
     # send model the info on the function call and function response
+    # TODO: handle openai.error.ServiceUnavailableError:
     response = openai.ChatCompletion.create(
         model="gpt-4-0613",# "gpt-3.5-turbo-16k-0613"
         messages=chat_history+[
@@ -194,7 +191,6 @@ if __name__ == "__main__":
     if "personalization" not in st.session_state:
         st.session_state.personalization = {
             "who": "My name is Ian. I'm a farmer from Iowa. I'm pro-gun, pro-abortion, and worried about the economy.",
-            "length": "200 words",
             "simplification": False
         }
     
@@ -205,7 +201,6 @@ if __name__ == "__main__":
     with st.sidebar:
         st.header("Personalization")
         st.session_state.personalization['who'] = st.text_area("Who are you?", "My name is Ian. I'm a farmer from Iowa. I'm pro-gun, pro-abortion, and worried about the economy.")
-        st.session_state.personalization['length'] = st.slider("Response length", 50, 500, 100)
         st.session_state.personalization['simplification'] = st.checkbox("Speak to me like I'm 5")
 
     # Display chat messages from history on app rerun
