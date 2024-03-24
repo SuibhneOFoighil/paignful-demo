@@ -1,6 +1,9 @@
 # paignful-demo
-AI Vivek Ramaswamy. Demo'd for CEO of Vivek2024 and Vivek's Chief of Staff.
-Play with it [here](https://aivivek.streamlit.app).
+AI Vivek Ramaswamy. Demo'd for CEO of Vivek2024 and Vivek's Chief of Staff. See a demo below :
+
+https://github.com/SuibhneOFoighil/paignful-demo/assets/73955897/58c6926c-7467-46a0-b6ff-392e3aff72da
+
+
 ## Python version
 Python 3.8.18
 ## Description
